@@ -1508,22 +1508,30 @@ namespace Negozio.Controllers
                 Disconnetti(); // Chiusura del database
             }
         }
-        public void EliminaQuantitaArticolo(string codiceArticolo, int QuantitaDaSottrare)
+        public void EliminaQuantitaArticolo(string codiceArticolo, int quantitaDaSottrarre)
         {
             try
             {
-                Connetti(); // Connessione al database
+                Connetti();
 
-                _sqlCommand = new SqlCommand();
-                _sqlCommand.Connection = _sqlConnetion;
-                _sqlCommand.CommandType = CommandType.Text;
+                using (SqlCommand cmd = _sqlConnetion.CreateCommand())
+                {
+                    cmd.CommandType = CommandType.Text;
+                    cmd.CommandText = @"
+                UPDATE Magazzino
+                SET Quantita = Quantita - @quantita
+                WHERE CodiceArticolo = @codiceArticolo;
 
-                // Query per eliminare la quantità di un articolo
-                string query = "update Magazzino set Quantita = Quantita - @quantita where Magazzino.CodiceArticolo = @codiceArticolo";
-                _sqlCommand.Parameters.AddWithValue("@quantita", QuantitaDaSottrare);
-                _sqlCommand.Parameters.AddWithValue("@codiceArticolo", codiceArticolo);
-                _sqlCommand.CommandText = query;
-                _sqlCommand.ExecuteNonQuery();
+                DELETE FROM Magazzino
+                WHERE CodiceArticolo = @codiceArticolo
+                  AND Quantita <= 0;
+            ";
+
+                    cmd.Parameters.Add("@quantita", SqlDbType.Int).Value = quantitaDaSottrarre;
+                    cmd.Parameters.Add("@codiceArticolo", SqlDbType.VarChar).Value = codiceArticolo;
+
+                    cmd.ExecuteNonQuery();
+                }
             }
             catch (SqlException ex)
             {
@@ -1531,8 +1539,7 @@ namespace Negozio.Controllers
             }
             finally
             {
-                _sqlCommand = null;
-                Disconnetti(); // Chiusura del database
+                Disconnetti();
             }
         }
         public void EliminaCliente(int codiceCliente)

@@ -18,8 +18,8 @@ Blade Verse Armory è un sistema gestionale diviso in due aree principali:
 - **Password:** `Admin01@`
 
 ### 🧝‍♂️ Area Commesso
-- **Username:** `Dominici`
-- **Password:** `Dominici1#`
+- **Username:** `Commesso`
+- **Password:** `Commesso01#@`
 
 ---
 

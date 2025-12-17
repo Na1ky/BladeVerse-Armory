@@ -134,6 +134,7 @@ namespace Negozio.View
                     anno,
                     filePath
                 );
+                MessageBox.Show("Report salvato con successo !", "Informazione", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
             {

@@ -369,6 +369,7 @@ namespace Negozio.Controllers
                             newRow.Append(
                                 CreateStyledCell(a.DescrizioneArticolo),
                                 CreateStyledCell(a.PrezzoConIva().ToString("C2")),
+                                CreateStyledCell(a.Iva.ToString() + "%"),
                                 CreateStyledCell(a.Categoria),
                                 CreateStyledCell(a.Quantita.ToString())
                             );
