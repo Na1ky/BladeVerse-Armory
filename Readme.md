@@ -3,8 +3,9 @@
 
 [![License](https://img.shields.io/badge/License-Educational-blue.svg)](#) [![C#](https://img.shields.io/badge/Language-C%23-blue?logo=csharp&logoColor=white)](#) [![SQL Server](https://img.shields.io/badge/Database-SQL%20Server-red?logo=microsoftsqlserver&logoColor=white)](#)
 
-Blade Verse Armory is a **desktop management system** designed for a dark fantasy–themed shop selling legendary weapons, cursed blades, arcane relics, and collectible artifacts.  
-The system provides **Admin** and **Clerk** access, enabling structured management of inventory, sales, and shop operations with a gothic and immersive UI.
+Blade Verse Armory is a **mini project** developed as a school assignment. 
+It simulates a dark fantasy–themed shop management system for legendary weapons, cursed blades, arcane relics, and collectible artifacts.
+The project provides Admin and Clerk access, allowing basic management of inventory, sales, and shop operations with a gothic-inspired UI.
 
 ---
 
