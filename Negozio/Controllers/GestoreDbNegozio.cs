@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,7 +21,7 @@ namespace Negozio.Controllers
     {
         // Variabili globali
         static Random rnd = new Random();
-        private SqlConnection _sqlConnetion;
+        private SqlConnection _sqlConnection;
         private SqlCommand _sqlCommand;
         private readonly string nomeDb = Application.StartupPath + @"\DbNegozio.mdf";
         private string _strConn;
@@ -29,16 +30,26 @@ namespace Negozio.Controllers
         // Connessione al db
         private void Connetti()
         {
-            _strConn = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=" + nomeDb
-                + ";Integrated Security=True;Connect Timeout=30";
-            _sqlConnetion = new SqlConnection(_strConn);
-            _sqlConnetion.Open();
+            string appDataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "NomeApp");
+            Directory.CreateDirectory(appDataPath);
+
+            string dbPath = Path.Combine(appDataPath, nomeDb);
+
+            string dbSource = Path.Combine(Application.StartupPath, nomeDb);
+            if (!File.Exists(dbPath))
+                File.Copy(dbSource, dbPath);
+
+            _strConn = $@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename={dbPath};Integrated Security=True;Connect Timeout=30";
+
+            _sqlConnection = new SqlConnection(_strConn);
+            _sqlConnection.Open();
+
         }
 
         // Disconnessione dal db
         private void Disconnetti()
         {
-            _sqlConnetion.Close();
+            _sqlConnection.Close();
         }
 
         // LOGIN
@@ -51,7 +62,7 @@ namespace Negozio.Controllers
                 Connetti(); // Apre la connessione al database
 
                 _sqlCommand = new SqlCommand();
-                _sqlCommand.Connection = _sqlConnetion;
+                _sqlCommand.Connection = _sqlConnection;
                 _sqlCommand.CommandType = CommandType.Text;
 
                 // Query per ottenere l'utente con lo username fornito
@@ -108,7 +119,7 @@ namespace Negozio.Controllers
                 Connetti(); // Apre la connessione
 
                 _sqlCommand = new SqlCommand();
-                _sqlCommand.Connection = _sqlConnetion;
+                _sqlCommand.Connection = _sqlConnection;
                 _sqlCommand.CommandType = CommandType.Text;
 
                 // Ottiene la password attuale dal database
@@ -130,7 +141,7 @@ namespace Negozio.Controllers
 
                     Connetti(); // Riapre la connessione per l'update
                     _sqlCommand = new SqlCommand();
-                    _sqlCommand.Connection = _sqlConnetion;
+                    _sqlCommand.Connection = _sqlConnection;
                     _sqlCommand.CommandType = CommandType.Text;
 
                     // Aggiorna la password nel database
@@ -164,7 +175,7 @@ namespace Negozio.Controllers
                 Connetti(); // Apre la connessione al database
 
                 _sqlCommand = new SqlCommand();
-                _sqlCommand.Connection = _sqlConnetion;
+                _sqlCommand.Connection = _sqlConnection;
                 _sqlCommand.CommandType = CommandType.Text;
 
                 // Query per selezionare tutti gli articoli della categoria specificata
@@ -210,7 +221,7 @@ namespace Negozio.Controllers
                 Connetti(); // Apre la connessione al database
 
                 _sqlCommand = new SqlCommand();
-                _sqlCommand.Connection = _sqlConnetion;
+                _sqlCommand.Connection = _sqlConnection;
                 _sqlCommand.CommandType = CommandType.Text;
 
                 // Query per ottenere le categorie di fornitura uniche
@@ -247,7 +258,7 @@ namespace Negozio.Controllers
                 Connetti(); // Apre la connessione al database
 
                 _sqlCommand = new SqlCommand();
-                _sqlCommand.Connection = _sqlConnetion;
+                _sqlCommand.Connection = _sqlConnection;
                 _sqlCommand.CommandType = CommandType.Text;
 
                 // Query per ottenere le informazioni del commesso in base allo username
@@ -291,7 +302,7 @@ namespace Negozio.Controllers
                 Connetti(); // Apre la connessione al database
 
                 _sqlCommand = new SqlCommand();
-                _sqlCommand.Connection = _sqlConnetion;
+                _sqlCommand.Connection = _sqlConnection;
                 _sqlCommand.CommandType = CommandType.Text;
 
                 // Query per ottenere i dettagli del cliente con il codice carta fedeltà
@@ -333,7 +344,7 @@ namespace Negozio.Controllers
                 Connetti(); // Apre la connessione al database
 
                 _sqlCommand = new SqlCommand();
-                _sqlCommand.Connection = _sqlConnetion;
+                _sqlCommand.Connection = _sqlConnection;
                 _sqlCommand.CommandType = CommandType.Text;
 
                 // Query per ottenere i dettagli dell'amministratore in base allo username
@@ -374,7 +385,7 @@ namespace Negozio.Controllers
                 Connetti(); // Apre la connessione al database
 
                 _sqlCommand = new SqlCommand();
-                _sqlCommand.Connection = _sqlConnetion;
+                _sqlCommand.Connection = _sqlConnection;
                 _sqlCommand.CommandType = CommandType.Text;
 
                 // Query per ottenere tutti gli amministratori
@@ -415,7 +426,7 @@ namespace Negozio.Controllers
                 Connetti(); // Apre la connessione al database
 
                 _sqlCommand = new SqlCommand();
-                _sqlCommand.Connection = _sqlConnetion;
+                _sqlCommand.Connection = _sqlConnection;
                 _sqlCommand.CommandType = CommandType.Text;
 
                 // Query per ottenere tutti i clienti
@@ -457,7 +468,7 @@ namespace Negozio.Controllers
                 Connetti(); // Apre la connessione al database
 
                 _sqlCommand = new SqlCommand();
-                _sqlCommand.Connection = _sqlConnetion;
+                _sqlCommand.Connection = _sqlConnection;
                 _sqlCommand.CommandType = CommandType.Text;
 
                 // Query per ottenere i dettagli dell'articolo in base al codice
@@ -500,7 +511,7 @@ namespace Negozio.Controllers
             {
                 Connetti(); // Connessione al database
                 _sqlCommand = new SqlCommand();
-                _sqlCommand.Connection = _sqlConnetion;
+                _sqlCommand.Connection = _sqlConnection;
                 _sqlCommand.CommandType = CommandType.Text;
 
                 string query = "select * from Commessi"; // Query per ottenere tutti i commessi
@@ -544,7 +555,7 @@ namespace Negozio.Controllers
             {
                 Connetti(); // Connessione al database
                 _sqlCommand = new SqlCommand();
-                _sqlCommand.Connection = _sqlConnetion;
+                _sqlCommand.Connection = _sqlConnection;
                 _sqlCommand.CommandType = CommandType.Text;
 
                 string query = "select * from Fornitori"; // Query per ottenere tutti i fornitori
@@ -587,7 +598,7 @@ namespace Negozio.Controllers
             {
                 Connetti(); // Connessione al database
                 _sqlCommand = new SqlCommand();
-                _sqlCommand.Connection = _sqlConnetion;
+                _sqlCommand.Connection = _sqlConnection;
                 _sqlCommand.CommandType = CommandType.Text;
 
                 // Query per ottenere tutte le fatture del mese e anno
@@ -629,7 +640,7 @@ namespace Negozio.Controllers
                 Connetti(); // Apre la connessione al database
 
                 _sqlCommand = new SqlCommand();
-                _sqlCommand.Connection = _sqlConnetion;
+                _sqlCommand.Connection = _sqlConnection;
                 _sqlCommand.CommandType = CommandType.Text;
 
                 // Query filtrata per mese e anno
@@ -676,7 +687,7 @@ namespace Negozio.Controllers
                 Connetti(); // Apre la connessione al database
 
                 _sqlCommand = new SqlCommand();
-                _sqlCommand.Connection = _sqlConnetion;
+                _sqlCommand.Connection = _sqlConnection;
                 _sqlCommand.CommandType = CommandType.Text;
 
                 // Query filtrata per mese e anno
@@ -722,7 +733,7 @@ namespace Negozio.Controllers
             {
                 Connetti(); // Connessione al database
                 _sqlCommand = new SqlCommand();
-                _sqlCommand.Connection = _sqlConnetion;
+                _sqlCommand.Connection = _sqlConnection;
                 _sqlCommand.CommandType = CommandType.Text;
 
                 string query = "select * from Magazzino WHERE Quantita <= 3"; // Query per ottenere tutti gli articoli in esaurimento
@@ -766,7 +777,7 @@ namespace Negozio.Controllers
             {
                 Connetti(); // Connessione al database
                 _sqlCommand = new SqlCommand();
-                _sqlCommand.Connection = _sqlConnetion;
+                _sqlCommand.Connection = _sqlConnection;
                 _sqlCommand.CommandType = CommandType.Text;
 
                 string query = "select * from Magazzino"; // Query per ottenere tutti gli articoli
@@ -809,7 +820,7 @@ namespace Negozio.Controllers
             {
                 Connetti(); // Connessione al database
                 _sqlCommand = new SqlCommand();
-                _sqlCommand.Connection = _sqlConnetion;
+                _sqlCommand.Connection = _sqlConnection;
                 _sqlCommand.CommandType = CommandType.Text;
 
                 // Query per ottenere il fornitore specifico tramite ID
@@ -855,7 +866,7 @@ namespace Negozio.Controllers
                 Connetti(); // Connessione al database
 
                 _sqlCommand = new SqlCommand();
-                _sqlCommand.Connection = _sqlConnetion;
+                _sqlCommand.Connection = _sqlConnection;
                 _sqlCommand.CommandType = CommandType.Text;
 
                 // Query di inserimento
@@ -896,10 +907,10 @@ namespace Negozio.Controllers
                 Connetti(); // Connessione al database
 
                 _sqlCommand = new SqlCommand();
-                _sqlCommand.Connection = _sqlConnetion;
+                _sqlCommand.Connection = _sqlConnection;
                 _sqlCommand.CommandType = CommandType.Text;
 
-                _sqlTransaction = _sqlConnetion.BeginTransaction();
+                _sqlTransaction = _sqlConnection.BeginTransaction();
                 _sqlCommand.Transaction = _sqlTransaction;
 
                 // Aggiungi l'utente
@@ -961,10 +972,10 @@ namespace Negozio.Controllers
                 Connetti(); // Connessione al database
 
                 _sqlCommand = new SqlCommand();
-                _sqlCommand.Connection = _sqlConnetion;
+                _sqlCommand.Connection = _sqlConnection;
                 _sqlCommand.CommandType = CommandType.Text;
 
-                _sqlTransaction = _sqlConnetion.BeginTransaction();
+                _sqlTransaction = _sqlConnection.BeginTransaction();
                 _sqlCommand.Transaction = _sqlTransaction;
 
                 // Aggiungi l'utente
@@ -1031,7 +1042,7 @@ namespace Negozio.Controllers
                 Connetti();  // Connessione al database
 
                 _sqlCommand = new SqlCommand();
-                _sqlCommand.Connection = _sqlConnetion;
+                _sqlCommand.Connection = _sqlConnection;
                 _sqlCommand.CommandType = CommandType.Text;
 
                 // query inserimento del nuovo fornitore
@@ -1076,7 +1087,7 @@ namespace Negozio.Controllers
                 Connetti(); // Connessione al database
 
                 _sqlCommand = new SqlCommand();
-                _sqlCommand.Connection = _sqlConnetion;
+                _sqlCommand.Connection = _sqlConnection;
                 _sqlCommand.CommandType = CommandType.Text;
 
                 // Query inserimento nuovo prodotto
@@ -1115,7 +1126,7 @@ namespace Negozio.Controllers
                 Connetti(); // Connessione al database
 
                 _sqlCommand = new SqlCommand();
-                _sqlCommand.Connection = _sqlConnetion;
+                _sqlCommand.Connection = _sqlConnection;
                 _sqlCommand.CommandType = CommandType.Text;
 
                 // Query aumento quantità prodotto
@@ -1146,7 +1157,7 @@ namespace Negozio.Controllers
                 Connetti(); // Connessione al database
 
                 _sqlCommand = new SqlCommand();
-                _sqlCommand.Connection = _sqlConnetion;
+                _sqlCommand.Connection = _sqlConnection;
                 _sqlCommand.CommandType = CommandType.Text;
 
                 // Query per aggiornare i dati dell' admin
@@ -1190,7 +1201,7 @@ namespace Negozio.Controllers
                 Connetti(); // Connessione al database
 
                 _sqlCommand = new SqlCommand();
-                _sqlCommand.Connection = _sqlConnetion;
+                _sqlCommand.Connection = _sqlConnection;
                 _sqlCommand.CommandType = CommandType.Text;
 
                 // Query per aggiornare i dati del commesso
@@ -1237,7 +1248,7 @@ namespace Negozio.Controllers
                 Connetti(); // Connessione al database
 
                 _sqlCommand = new SqlCommand();
-                _sqlCommand.Connection = _sqlConnetion;
+                _sqlCommand.Connection = _sqlConnection;
                 _sqlCommand.CommandType = CommandType.Text;
 
                 // Query modifica del fornitore
@@ -1280,7 +1291,7 @@ namespace Negozio.Controllers
             {
                 Connetti(); // Connessione al database
                 _sqlCommand = new SqlCommand();
-                _sqlCommand.Connection = _sqlConnetion;
+                _sqlCommand.Connection = _sqlConnection;
                 _sqlCommand.CommandType = CommandType.Text;
 
                 // Query modifica del prodotto
@@ -1319,7 +1330,7 @@ namespace Negozio.Controllers
             {
                 Connetti(); // COnnessione al database
                 _sqlCommand = new SqlCommand();
-                _sqlCommand.Connection = _sqlConnetion;
+                _sqlCommand.Connection = _sqlConnection;
                 _sqlCommand.CommandType = CommandType.Text;
 
                 // Query modifica del cliente
@@ -1362,7 +1373,7 @@ namespace Negozio.Controllers
             {
                 Connetti(); // Connessione al database
                 _sqlCommand = new SqlCommand();
-                _sqlCommand.Connection = _sqlConnetion;
+                _sqlCommand.Connection = _sqlConnection;
                 _sqlCommand.CommandType = CommandType.Text;
 
                 // Query eliminazione dell' admin
@@ -1388,7 +1399,7 @@ namespace Negozio.Controllers
             {
                 Connetti(); // Connessione al database
                 _sqlCommand = new SqlCommand();
-                _sqlCommand.Connection = _sqlConnetion;
+                _sqlCommand.Connection = _sqlConnection;
                 _sqlCommand.CommandType = CommandType.Text;
 
                 // Query eliminazione dell' admin
@@ -1414,7 +1425,7 @@ namespace Negozio.Controllers
             {
                 Connetti(); // Connessione al database
                 _sqlCommand = new SqlCommand();
-                _sqlCommand.Connection = _sqlConnetion;
+                _sqlCommand.Connection = _sqlConnection;
                 _sqlCommand.CommandType = CommandType.Text;
 
                 // Query eliminazione del commesso
@@ -1442,7 +1453,7 @@ namespace Negozio.Controllers
                 Connetti(); // Connessione al database
 
                 // Verifica se esistono ordini collegati al fornitore
-                _sqlCommand = new SqlCommand("SELECT COUNT(*) FROM Magazzino WHERE IdFornitore = @id", _sqlConnetion);
+                _sqlCommand = new SqlCommand("SELECT COUNT(*) FROM Magazzino WHERE IdFornitore = @id", _sqlConnection);
                 _sqlCommand.Parameters.AddWithValue("@id", id);
                 int count = (int)_sqlCommand.ExecuteScalar();
 
@@ -1459,14 +1470,14 @@ namespace Negozio.Controllers
                         return;
 
                     // Elimina prima gli ordini collegati
-                    _sqlCommand = new SqlCommand("DELETE FROM Ordini WHERE IdFornitore = @id", _sqlConnetion);
+                    _sqlCommand = new SqlCommand("DELETE FROM Ordini WHERE IdFornitore = @id", _sqlConnection);
                     _sqlCommand.Parameters.AddWithValue("@id", id);
                     _sqlCommand.ExecuteNonQuery();
                     MessageBox.Show("Fornitore eliminato con successo !", "Successo", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
 
                 // Ora elimina il fornitore
-                _sqlCommand = new SqlCommand("DELETE FROM Fornitori WHERE IdFornitore = @id", _sqlConnetion);
+                _sqlCommand = new SqlCommand("DELETE FROM Fornitori WHERE IdFornitore = @id", _sqlConnection);
                 _sqlCommand.Parameters.AddWithValue("@id", id);
                 _sqlCommand.ExecuteNonQuery();
             }
@@ -1487,7 +1498,7 @@ namespace Negozio.Controllers
                 Connetti(); // Connessione al database
 
                 _sqlCommand = new SqlCommand();
-                _sqlCommand.Connection = _sqlConnetion;
+                _sqlCommand.Connection = _sqlConnection;
                 _sqlCommand.CommandType = CommandType.Text;
 
                 // Query eliminazione prodotto dal magazzino
@@ -1514,7 +1525,7 @@ namespace Negozio.Controllers
             {
                 Connetti();
 
-                using (SqlCommand cmd = _sqlConnetion.CreateCommand())
+                using (SqlCommand cmd = _sqlConnection.CreateCommand())
                 {
                     cmd.CommandType = CommandType.Text;
                     cmd.CommandText = @"
@@ -1549,7 +1560,7 @@ namespace Negozio.Controllers
                 Connetti(); // Connessione al database
 
                 _sqlCommand = new SqlCommand();
-                _sqlCommand.Connection = _sqlConnetion;
+                _sqlCommand.Connection = _sqlConnection;
                 _sqlCommand.CommandType = CommandType.Text;
 
                 // Query eliminazione cliente
@@ -1580,7 +1591,7 @@ namespace Negozio.Controllers
                 List<Cliente> clienti = new List<Cliente>(); // Lista cliente filtrata
                 Connetti(); // Connessione al database
                 _sqlCommand = new SqlCommand();
-                _sqlCommand.Connection = _sqlConnetion;
+                _sqlCommand.Connection = _sqlConnection;
                 _sqlCommand.CommandType = CommandType.Text;
 
                 // Query per la ricerca nella tabella Clienti
@@ -1620,7 +1631,7 @@ namespace Negozio.Controllers
                 Connetti(); // Connessione al database
 
                 _sqlCommand = new SqlCommand();
-                _sqlCommand.Connection = _sqlConnetion;
+                _sqlCommand.Connection = _sqlConnection;
                 _sqlCommand.CommandType = CommandType.Text;
 
                 // Query ricerca dei prodotti
@@ -1659,7 +1670,7 @@ namespace Negozio.Controllers
                 Connetti(); // Connessione al database
 
                 _sqlCommand = new SqlCommand();
-                _sqlCommand.Connection = _sqlConnetion;
+                _sqlCommand.Connection = _sqlConnection;
                 _sqlCommand.CommandType = CommandType.Text;
 
                 // Query ricerca commessi
@@ -1699,7 +1710,7 @@ namespace Negozio.Controllers
                 Connetti(); // Connessione al database
 
                 _sqlCommand = new SqlCommand();
-                _sqlCommand.Connection = _sqlConnetion;
+                _sqlCommand.Connection = _sqlConnection;
                 _sqlCommand.CommandType = CommandType.Text;
 
                 // Query ricerca fornitori
@@ -1748,7 +1759,7 @@ namespace Negozio.Controllers
                 Connetti(); // Connessione al database
 
                 _sqlCommand = new SqlCommand();
-                _sqlCommand.Connection = _sqlConnetion;
+                _sqlCommand.Connection = _sqlConnection;
                 _sqlCommand.CommandType = CommandType.Text;
 
                 //Query ricerca articolo
@@ -1783,7 +1794,7 @@ namespace Negozio.Controllers
                 Connetti(); // Connessione al database
 
                 _sqlCommand = new SqlCommand();
-                _sqlCommand.Connection = _sqlConnetion;
+                _sqlCommand.Connection = _sqlConnection;
                 _sqlCommand.CommandType = CommandType.Text;
 
                 // Ricerca cliente
@@ -1845,7 +1856,7 @@ namespace Negozio.Controllers
                 Connetti(); // Connessione al database
 
                 _sqlCommand = new SqlCommand();
-                _sqlCommand.Connection = _sqlConnetion;
+                _sqlCommand.Connection = _sqlConnection;
                 _sqlCommand.CommandType = CommandType.Text;
 
                 // Query inserimento della fattura nel database
