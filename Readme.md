@@ -57,8 +57,6 @@ The interface follows a **grimdark fantasy aesthetic** with rune-inspired icons,
 - Primary colors: **Black, Purple, Crimson, Iron Gray**  
 
 **Preview:**  
-![App Screenshot](./screenshots/demo1.png)  
-![Admin Dashboard](./screenshots/demo2.png)  
 
 <img src="https://xzcjopmcjzlldyrpssxr.supabase.co/storage/v1/object/public/Projects/home.png" />
 <img src="https://xzcjopmcjzlldyrpssxr.supabase.co/storage/v1/object/public/Projects/admin.png" />
