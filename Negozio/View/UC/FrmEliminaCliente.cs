@@ -28,7 +28,7 @@ namespace Negozio.View.UC
             try
             {
                 List<Cliente> lstCliente = DbNegozio.OttieniTuttiIClienti();
-                lstCliente = lstCliente.OrderBy(x => x).ToList();
+                lstCliente = lstCliente.OrderBy(x => x.Cognome).ToList();
                 CmbClienti.DataSource = lstCliente;
                 CmbClienti.DisplayMember = "Cognome";
                 CmbClienti.ValueMember = "CodiceFedelta";
