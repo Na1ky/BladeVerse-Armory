@@ -58,9 +58,9 @@ The interface follows a **grimdark fantasy aesthetic** with rune-inspired icons,
 
 **Preview:**  
 
-<img src="https://xzcjopmcjzlldyrpssxr.supabase.co/storage/v1/object/public/Projects/home.png" />
-<img src="https://xzcjopmcjzlldyrpssxr.supabase.co/storage/v1/object/public/Projects/admin.png" />
-<img src="https://xzcjopmcjzlldyrpssxr.supabase.co/storage/v1/object/public/Projects/store.png" />
+<img src="https://portfolio-server-ke9f.onrender.com/img/project/BladeVerse/home.png" />
+<img src="https://portfolio-server-ke9f.onrender.com/img/project/BladeVerse/admin.png" />
+<img src="https://portfolio-server-ke9f.onrender.com/img/project/BladeVerse/store.png" />
 
 ---
 
